@@ -4,6 +4,7 @@ import { VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { ClipLoader } from "react-spinners";
+import Link from "next/link";
 
 export default function ReAuth() {
   const router = useRouter();
@@ -361,13 +362,13 @@ export default function ReAuth() {
               }`}
             >
               {/* Submit Button */}
-              <a
+              <Link
                 href="/auth/login"
                 type="submit"
                 className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition duration-200 ease-in-out"
               >
                 Go to Login
-              </a>
+              </Link>
             </div>
           )}
         </div>
