@@ -1,3 +1,4 @@
+import Tooltip from '@/components/Tooltip'
 import React from 'react'
 
 export default function usefulComponents() {

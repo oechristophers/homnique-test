@@ -1,4 +1,5 @@
 import Tooltip from "@/components/Tooltip";
+import Link from "next/link";
 import React from "react";
 
 export default function HomePage() {
@@ -11,12 +12,12 @@ export default function HomePage() {
        Several stuffs about Homnique
       </div>
       <div>
-        <a
+        <Link
           href="/auth/login"
           className="py-3 px-5 rounded-full text-sm cursor-pointer text-white font-bold bg-[hsl(208,86%,48%)] hover:bg-[hsl(208,86%,58%)]"
         >
           Go to Login
-        </a>
+        </Link>
       </div>
     </div>
   </div>

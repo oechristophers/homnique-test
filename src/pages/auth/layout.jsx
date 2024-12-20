@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -25,7 +26,7 @@ export default function Layout({ children }) {
         />
       </div>
 
-      <a href="/" className="w-[181px] h-[50px] flex items-center mr-[90%] mt-[14px] ml-[22px] md:mt-0  md:ml-0 gap-2 z-30 md:fixed top-[14px] left-[22px] transition-all duration-300 ease-in-out">
+      <Link href="/" className="w-[181px] h-[50px] flex items-center mr-[90%] mt-[14px] ml-[22px] md:mt-0  md:ml-0 gap-2 z-30 md:fixed top-[14px] left-[22px] transition-all duration-300 ease-in-out">
         <section className="relative w-[53.85px] h-[53.85px] flex items-center justify-center transition-all duration-300 ease-in-out">
           {/* Centered Black Background */}
           <div className="absolute w-[80%] h-[80%] bg-black rounded-full z-0 transition-all duration-300 ease-in-out"></div>
@@ -45,7 +46,7 @@ export default function Layout({ children }) {
         <h1 className="font-bold text-[24px]  transition-all duration-300 ease-in-out">
           Homnique
         </h1>
-      </a>
+      </Link>
 
       <div className="absolute md:relative z-20 w-full sm:px-[6%] md:px-0 bg-white  md:w-[calc(100%-360px)] lg:w-[calc(100%-420px)] md:bg-gray-50 transition-all duration-300 ease-in-out">
         {children}

@@ -10,8 +10,9 @@ import {
 } from "@mui/icons-material";
 import { ClipLoader } from "react-spinners";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
-export default function finishUp() {
+export default function FinishUp() {
   const [email, setEmail] = useState("");
   const [fullname, setFullname] = useState("");
   const [password, setPassword] = useState("");
@@ -258,13 +259,13 @@ export default function finishUp() {
                       className="text-sm font-medium text-gray-700"
                     >
                       By creating an account , you agree to our{" "}
-                      <a href="/" className="text-blue-500">
+                      <Link href="/" className="text-blue-500">
                         Terms of Use
-                      </a>{" "}
+                      </Link>{" "}
                       and{" "}
-                      <a href="/" className="text-blue-500">
+                      <Link href="/" className="text-blue-500">
                         Privacy Policy
-                      </a>
+                      </Link>
                     </label>
                   </div>
               </div>

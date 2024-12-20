@@ -254,7 +254,7 @@ export default function ReAuth() {
                   Verify Code
                 </button>
                 <p className="mt-5">
-                  If you didn't receive a code!{" "}
+                  If you didn&apos;t receive a code!{" "}
                   <span onClick={handleResend} className="text-red-500">
                     Resend
                   </span>{" "}

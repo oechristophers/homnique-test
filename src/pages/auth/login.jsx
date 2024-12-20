@@ -3,6 +3,7 @@ import Layout from "./layout";
 import { ErrorOutlineOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { ClipLoader } from "react-spinners";
+import Link from "next/link";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -110,12 +111,12 @@ export default function SignIn() {
                 )}
 
                 {/* Forgot Password Section */}
-                <a
+                <Link
                   href="/auth/forgot-password"
                   className="text-sm font-medium text-blue-600 hover:underline"
                 >
                   Forgot Password?
-                </a>
+                </Link>
               </div>
 
               {/* Submit Button */}
