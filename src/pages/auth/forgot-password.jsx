@@ -42,7 +42,7 @@ export default function ReAuth() {
 
     // Simulate API call with a timeout
     setTimeout(() => {
-      if (email === "user@example.com") {
+      if (email === "daramola@homnique.com") {
         setMessage("A password reset link has been sent to your email.");
         setStep(2); // Proceed to the next step (auth code input)
       } else {
