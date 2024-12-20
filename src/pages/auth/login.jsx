@@ -12,18 +12,18 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const [page, setPage] = useState('');
 
-let page;
   useEffect(() => {
-      // Accessing localStorage only after the component has mounted
-      const storedUsername = localStorage.getItem('username');
-      if (storedUsername) {
-       page = "/dashboard";
-      }else{
-        page = "/auth/finish-up";
-      }
-    }, []);
-  
+    // Accessing localStorage only after the component has mounted
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setPage("/dashboard");
+    } else {
+      setPage("/auth/finish-up");
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 

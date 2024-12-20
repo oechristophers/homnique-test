@@ -321,9 +321,15 @@ export default function ReAuth() {
                     className="absolute right-3 top-3 cursor-pointer text-gray-500"
                   >
                     {showPassword ? (
-                      <VisibilityOutlined className="text-sm text-[#00000048]" fontSize="3px" />
+                      <VisibilityOutlined
+                        className="text-sm text-[#00000048]"
+                        fontSize="3px"
+                      />
                     ) : (
-                      <VisibilityOffOutlined className="text-sm text-[#00000048]" fontSize="3px" />
+                      <VisibilityOffOutlined
+                        className="text-sm text-[#00000048]"
+                        fontSize="3px"
+                      />
                     )}
                   </span>
                 </div>
@@ -366,8 +372,13 @@ export default function ReAuth() {
                 href="/auth/login"
                 type="submit"
                 className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition duration-200 ease-in-out"
+                onClick={()=>setLoading(true)}
               >
-                Go to Login
+                {loading ? (
+                  <ClipLoader color="#ffffff" size={20} />
+                ) : (
+                  "Go to Login"
+                )}
               </Link>
             </div>
           )}
