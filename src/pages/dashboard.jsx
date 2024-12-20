@@ -21,9 +21,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen ">
-      <div className="flex flex-col items-center p-8 rounded-xl  box-shadow gap-4 w-[60%]">
-        <div className="text-black text-3xl font-bold">Welcome to your dashboard {username || 'Guest'}</div>
+    <div className="flex flex-col items-center px-2 justify-center min-h-screen ">
+      <div className="flex flex-col items-center py-20 md:p-8 rounded-xl  box-shadow gap-4 md:w-[60%]">
+        <div className="text-black text-3xl font-bold w-full text-center ">Welcome to your dashboard {username || 'Guest'}</div>
         <div>
           <p className='text-xl'>Your role is: Keyworker</p>
         </div>
