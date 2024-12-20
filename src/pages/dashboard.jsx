@@ -14,9 +14,6 @@ export default function Dashboard() {
   }, []);
 
   const handleSignOut = () => {
-    localStorage.removeItem('username'); // Clear the username from localStorage
-    setUsername(''); // Clear the state
-    // Add any other sign-out logic, such as redirecting the user or resetting app state
   router.push('/auth/login'); // Redirect to the login page
   };
 

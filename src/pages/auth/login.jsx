@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "./layout";
-import { ErrorOutlineOutlined } from "@mui/icons-material";
+import { ErrorOutlineOutlined, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { ClipLoader } from "react-spinners";
 import Link from "next/link";
@@ -10,8 +10,20 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
+let page;
+  useEffect(() => {
+      // Accessing localStorage only after the component has mounted
+      const storedUsername = localStorage.getItem('username');
+      if (storedUsername) {
+       page = "/dashboard";
+      }else{
+        page = "/auth/finish-up";
+      }
+    }, []);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,8 +43,7 @@ export default function SignIn() {
     if (data.authenticated) {
       alert("Login successful!");
       // Redirect to a different page, e.g., dashboard
-      router.push('/dashboard')
-
+      router.push(page);
     } else {
       setError(data.message);
     }
@@ -73,17 +84,31 @@ export default function SignIn() {
               <label className="block text-left mb-1 text-gray-700 text-sm">
                 Password
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                maxLength={320}
-                placeholder="Enter password"
-                className={`mb-4 p-3 h-12 rounded-md border w-full text-black ${
-                  error ? "border-red-500" : ""
-                } focus:ring-2 focus:ring-blue-500`}
-                required
-              />
+              <div className="relative mb-4">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="p-3 h-12 rounded-md border w-full text-black focus:ring-2 focus:ring-blue-500"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 cursor-pointer text-gray-500"
+                >
+                  {showPassword ? (
+                    <VisibilityOutlined
+                      className="text-sm  text-[#00000048]"
+                      fontSize="3px"
+                    />
+                  ) : (
+                    <VisibilityOffOutlined
+                      className="text-sm  text-[#00000048]"
+                      fontSize="3px"
+                    />
+                  )}
+                </span>
+              </div>
 
               {/* Error Message */}
 
@@ -125,11 +150,7 @@ export default function SignIn() {
                 className="w-full bg-blue-500 text-white font-semibold p-3 rounded-md hover:bg-blue-600 transition duration-200 ease-in-out"
                 disabled={loading}
               >
-               {loading ? (
-                  <ClipLoader color="#ffffff" size={20} />
-                ) : (
-                  "Login"
-                )}
+                {loading ? <ClipLoader color="#ffffff" size={20} /> : "Login"}
               </button>
             </form>
           </div>
