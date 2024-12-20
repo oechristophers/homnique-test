@@ -267,7 +267,7 @@ export default function ReAuth() {
             <div className="flex flex-col items-center transition-all duration-500 ease-in-out">
               <form onSubmit={handleChangePassword} className="w-full">
                 {/* New Password Input */}
-                <label className="block text-left mb-1 text-gray-700 text-sm">
+                <label className=" text-left mb-1 text-gray-700 text-sm flex">
                   New Password
                 </label>
                 <div className="relative mb-4">
@@ -301,35 +301,28 @@ export default function ReAuth() {
                   use 8 or more characters, with a mix of letters, numbers and
                   symbols
                 </p>
+                <br />
                 {/* Confirm Password Input */}
-                <label className="float-start mb-1 text-gray-700 text-sm ">
+                <label className=" mb-1 text-gray-700 text-sm w-full text-left flex ">
                   Confirm Password
                 </label>
 
                 <div className="relative mb-4">
                   <input
                     type={showPassword ? "text" : "password"}
-                    className={`p-3 h-12 rounded-md ${
-                      error ? "border-red-500" : ""
-                    } border w-full text-black focus:ring-2 focus:ring-blue-500`}
+                    className="p-3 h-12 rounded-md border w-full text-black focus:ring-2 focus:ring-blue-500"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                   />
                   <span
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-[4rem] cursor-pointer text-gray-500"
+                    className="absolute right-3 top-3 cursor-pointer text-gray-500"
                   >
                     {showPassword ? (
-                      <VisibilityOutlined
-                        className="text-sm  text-[#00000048]"
-                        fontSize="3px"
-                      />
+                      <VisibilityOutlined className="text-sm text-[#00000048]" fontSize="3px" />
                     ) : (
-                      <VisibilityOffOutlined
-                        className="text-sm  text-[#00000048]"
-                        fontSize="3px"
-                      />
+                      <VisibilityOffOutlined className="text-sm text-[#00000048]" fontSize="3px" />
                     )}
                   </span>
                 </div>
@@ -369,7 +362,7 @@ export default function ReAuth() {
             >
               {/* Submit Button */}
               <a
-                href="/auth/signIn"
+                href="/auth/login"
                 type="submit"
                 className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition duration-200 ease-in-out"
               >
