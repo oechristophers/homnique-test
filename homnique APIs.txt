@@ -1,0 +1,43 @@
+Admin priviledge: 
+APi:POST http://localhost:7000/auth/user/create
+	datas
+	  {email,
+           role
+	  }
+The admin has accesss to this page where he inputs the new user's email and role, 
+then login credential is sent to the new user,
+the new user can then decide to change password or not
+USERS
+SIGNIN:
+POST http://localhost:7000/auth/user/signIn
+	data
+  	{ username,
+          password
+	}
+ The username is the name generated from the user's email 
+for example: email (adekanmisamuel342@gmail.com)
+becomes username of adekanmisamuel342. the code copies the email before the @.
+FORGET PASSWORD:
+
+POST http://localhost:7000/auth/user/forgetPassword
+	data
+	{email
+        }
+just the email alone is needed for forget password.
+
+VERIFY OTP:
+POST http://localhost:7000/auth/user/verifyOtp
+   data
+	{email, 
+	 otp
+	}
+After sending email for forget password, and otp is sent to the email 
+
+RESET PASSWORD 
+POST http://localhost:7000/auth/user/resetPassword
+	data
+	{ otp,
+	new password,
+	confirm password
+        }
+OTP code will also be sent to the email then you need a new password the confirm the password .

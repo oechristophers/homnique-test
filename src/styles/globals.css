@@ -32,3 +32,9 @@ input[type="checkbox"] {
      box-shadow: 0 4px 8px hsl(218, 82%, 37%);
   }
   }
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}

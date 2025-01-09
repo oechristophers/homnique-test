@@ -1,56 +1,68 @@
 import React, { useEffect, useState } from "react";
 import Layout from "./layout";
-import { ErrorOutlineOutlined, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
+import {
+  ErrorOutlineOutlined,
+  VisibilityOffOutlined,
+  VisibilityOutlined,
+} from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { ClipLoader } from "react-spinners";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import axios from "axios";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState('');
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const [page, setPage] = useState('');
+  const [page, setPage] = useState("");
+  const { toast } = useToast();
 
-  useEffect(() => {
-    // Accessing localStorage only after the component has mounted
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setPage("/dashboard");
-    } else {
-      setPage("/auth/finish-up");
-    }
-  }, []);
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     setLoading(true);
-    setError("");
-
-    const res = await fetch("/api/auth/dummy-auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-
-    if (data.authenticated) {
-      alert("Login successful!");
-      // Redirect to a different page, e.g., dashboard
-      router.push(page);
-    } else {
-      setError(data.message);
-    }
-
-    setLoading(false);
+    setError(""); // Clear previous error messages
+  
+    axios.post(process.env.NEXT_PUBLIC_LOGIN_URL, {
+      username: email,
+      password: password,
+    })
+      .then((response) => {
+        if (response.data.success) {
+          // Save token to localStorage
+          setMessage(response.data.message);
+          localStorage.setItem("authToken", response.data.token);
+          localStorage.setItem("userName", response.data.username);
+          localStorage.setItem("userRole", response.data.role);
+  
+          // Show success toast
+          toast({
+            title: "Login successful",
+            description: `Welcome back, ${response.data.username}`, // Correct username interpolation
+            variant: "success", // Changed to "success" for successful login
+          });
+  
+          // Redirect to dashboard
+          router.push("/dashboard");
+        } else {
+          setError(response.data.message || 'Sign-in failed');
+        }
+      })
+      .catch((error) => {
+        setError(error.response?.data?.message || 'An error occurred');
+      })
+      .finally(() => {
+        setLoading(false); // Reset loading state after request is completed
+      });
   };
-
+  
+  
   return (
     <Layout>
       <div className="flex items-center justify-center min-h-screen relative">
@@ -71,7 +83,7 @@ export default function SignIn() {
                 Enter your work email
               </label>
               <input
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 maxLength={320}
@@ -113,10 +125,10 @@ export default function SignIn() {
               {/* Error Message */}
 
               {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between w-full mb-6">
+              <div className={`flex  items-center justify-between w-full mb-6`}>
                 {/* Remember Me Section */}
                 {error ? (
-                  <p className="text-red-500 text-sm mt-[-10px] float-start">
+                  <p className="text-red-500 text-sm mt-[-10px] max-w-[37ch]  float-start">
                     <ErrorOutlineOutlined /> {error}
                   </p>
                 ) : (

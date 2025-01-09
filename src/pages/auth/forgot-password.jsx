@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { ClipLoader } from "react-spinners";
 import Link from "next/link";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ReAuth() {
   const router = useRouter();
@@ -20,6 +22,7 @@ export default function ReAuth() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     let timer;
@@ -35,23 +38,41 @@ export default function ReAuth() {
   }, [step, countdown]);
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
     setError(false);
 
-    // Simulate API call with a timeout
-    setTimeout(() => {
-      if (email === "daramola@homnique.com") {
-        setMessage("A password reset link has been sent to your email.");
-        setStep(2); // Proceed to the next step (auth code input)
-      } else {
+    axios
+      .post(process.env.NEXT_PUBLIC_FORGOTPASS_URL, {
+        email: email,
+      })
+      .then((response) => {
+        if (response.data.success) {
+          // Save token to localStorage
+          setMessage(response.data.message);
+          localStorage.setItem("emailForResend", email);
+
+          // Show success toast
+          toast({
+            title: "Success",
+            description: "A 6 digit token has been sent to your email address.",
+            variant: "success",
+          });
+          setStep(2);
+        } else {
+          setError(true);
+          setMessage(response.data.message || "This email address is not registered.");
+        }
+      })
+      .catch((err) => {
         setError(true);
-        setMessage("This email address is not registered.");
-      }
-      setLoading(false);
-    }, 2000);
+        setMessage(err.message || "An error occurred. Please try again.");
+      })
+      .finally(() => {
+        setLoading(false); // Reset loading state after request is completed
+      });
   };
 
   // Handle change in auth code input
@@ -65,40 +86,117 @@ export default function ReAuth() {
   };
 
   // Handle Resend Code action
-  const handleResend = () => {
-    setCountdown(30); // Reset the countdown
-    setCanResend(false); // Disable the resend button again
-    setMessage("A new verification code has been sent to your email.");
-    setAuthCode(["", "", "", ""]); // Reset the auth code inputs
-  };
+  const handleResend = async () => {
+    const emailForResend = localStorage.getItem("emailForResend");
 
-  const handleVerifyCode = (e) => {
-    e.preventDefault();
-    const isCodeValid = authCode.join("") === "1234"; // Simulate valid code
-    if (isCodeValid) {
-      setMessage("");
-      setError(false);
-      setStep(3); // Proceed to change password form
-    } else {
+    if (!emailForResend) {
+      setMessage("No email found. Please enter your email again.");
       setError(true);
-      setMessage("Invalid code. Please try again.");
-      setCountdown(30);
+      return;
     }
+
+    axios
+      .post(process.env.NEXT_PUBLIC_FORGOTPASS_URL, {
+        email: emailForResend,
+      })
+      .then((response) => {
+        if (response.data.success) {
+          // Save token to localStorage
+          setMessage(response.data.message);
+          setCountdown(30);
+          setCanResend(false);
+          setMessage(" ");
+          setAuthCode(["", "", "", ""]);
+
+          toast({
+            title: "Token resend Success",
+            description: "",
+            variant: "success",
+          });
+        } else {
+          setError(true);
+          setMessage(response.data.message || "Error sending OTP. Please try again.");
+        }
+      })
+      .catch((err) => {
+        setError(true);
+        setMessage(
+          err?.message || "An unexpected error occurred. Please try again."
+        );
+      })
   };
 
-  const handleChangePassword = (e) => {
+  const handleVerifyCode = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage("");
+    setError(false);
+  
+    const otp = authCode.join("");
+  
+    axios
+      .post(process.env.NEXT_PUBLIC_VERIFYOTP_URL, {
+        email: email,
+        otp: otp, // Assuming the OTP should be sent as part of the payload
+      })
+      .then((response) => {
+        if (response.data.success) {
+          // Save token to localStorage
+          setMessage("");
+          setStep(3);
+          toast({
+            title: "Token verified",
+            variant: "success",
+          });
+        } else {
+          setError(true);
+          setMessage(response.data.message || "Invalid code. Please try again.");
+          setCountdown(30);
+        }
+      })
+      .catch((err) => {
+        setError(true);
+        setMessage(err.message || "An error occurred during OTP verification.");
+      })
+      .finally(() => {
+        setLoading(false); // Reset loading state after request is completed
+      });
+  };
+  
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+
     if (newPassword !== confirmPassword) {
       setError(true);
       setMessage("Passwords do not match. Please try again.");
       return;
     }
-    // Simulate password change API call
-    setTimeout(() => {
-      setMessage("Your password has been successfully changed.");
-      setStep(4); // Go back to email input form
-    }, 2000);
+
+    axios
+    .post(process.env.NEXT_PUBLIC_RESETPASS_URL, {
+      otp: authCode.join(""),
+      newPassword: newPassword,
+      confirmPassword: confirmPassword,
+    }).then((response) => {
+      if (response.data.success) {
+        setMessage("Your password has been successfully changed.");
+        setStep(4);
+      } else {
+        setError(true);
+        setMessage(
+          response.data.message || "Error changing password. Please try again."
+        );
+      }
+    }).catch((err) => {
+      setError(true);
+      setMessage(
+        err?.message || "An unexpected error occurred. Please try again."
+      );
+    })
+
   };
+
   return (
     <Layout>
       <div className="flex items-center justify-center min-h-screen relative">
@@ -372,7 +470,7 @@ export default function ReAuth() {
                 href="/auth/login"
                 type="submit"
                 className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition duration-200 ease-in-out"
-                onClick={()=>setLoading(true)}
+                onClick={() => setLoading(true)}
               >
                 {loading ? (
                   <ClipLoader color="#ffffff" size={20} />
